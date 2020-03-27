@@ -66,7 +66,7 @@ function SearchBar({ handleSearch = () => {} }) {
 	}, [handleSearch, debouncedSearchValue]);
 	const classes = useStyles();
 	return (
-		<AppBar position="static">
+		<AppBar position="sticky">
 			<Toolbar>
 				<Typography className={classes.title} variant="h6" noWrap>
 					Partage
