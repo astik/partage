@@ -1,3 +1,7 @@
+/*
+Highly inspired by https://material-ui.com/components/app-bar/#app-bar-with-a-primary-search-field
+*/
+
 import {
 	AppBar,
 	InputBase,
