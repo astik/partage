@@ -6,29 +6,41 @@ import {
 	makeStyles,
 	fade,
 } from '@material-ui/core';
+import BuildIcon from '@material-ui/icons/Build';
+import HomeIcon from '@material-ui/icons/Home';
+import KitchenIcon from '@material-ui/icons/LocalDining';
+import BabyIcon from '@material-ui/icons/ChildFriendly';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
 		flex: 1,
 		background: fade(theme.palette.info.light, 0.15),
+		position: 'relative',
 	},
-	title: {
-		fontSize: 14,
+	categoryIcon: {
+		position: 'absolute',
+		right: theme.spacing(2),
+		bottom: theme.spacing(2),
+		fontSize: '400%',
+		color: fade(theme.palette.info.light, 0.45),
+		zIndex: -1,
 	},
 }));
 
+const icons = {
+	Bricolage: BuildIcon,
+	Cuisine: KitchenIcon,
+	Maison: HomeIcon,
+	Puericulture: BabyIcon,
+};
+
 function ItemDisplay({ item }) {
 	const classes = useStyles();
+	const CategoryIcon = icons[item.category];
 	return (
 		<Card className={classes.root}>
 			<CardContent>
-				<Typography
-					className={classes.title}
-					color="textSecondary"
-					gutterBottom
-				>
-					{item.category}
-				</Typography>
+				<CategoryIcon className={classes.categoryIcon} />
 				<Typography variant="h5" component="h2">
 					{item.name}
 				</Typography>
