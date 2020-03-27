@@ -23,16 +23,20 @@ function App() {
 			let sheetData = await Tabletop.init({
 				key: process.env.REACT_APP_SPREADSHEET_URL,
 				simpleSheet: true,
-				debug: true,
 			});
-			sheetData = sheetData.map((item, i) => ({
-				...item,
-				category: item.Catégorie,
-				name: item.Nom,
-				id: i,
-				search: item.Catégorie.toLowerCase() + ' ' + item.Nom.toLowerCase(),
-			}));
-			console.log(sheetData);
+			sheetData = sheetData.map((item, i) => {
+				const { Catégorie: category, Nom: name, ...potentialOwnersData } = item;
+				const owners = Object.entries(potentialOwnersData)
+					.filter(([_, quantity]) => !!quantity)
+					.map(([owner, _]) => owner);
+				return {
+					id: i,
+					category,
+					name,
+					search: category.toLowerCase() + ' ' + name.toLowerCase(),
+					owners,
+				};
+			});
 			setItemList(sheetData);
 			setFilteredItemList(sheetData);
 		}
