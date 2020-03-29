@@ -66,7 +66,7 @@ function SearchBar({ handleSearch = () => {} }) {
 	const [searchValue, setSearchValue] = useState('');
 	const [debouncedSearchValue] = useDebounce(searchValue, 250);
 	useEffect(() => {
-		handleSearch(debouncedSearchValue);
+		handleSearch(debouncedSearchValue.toLowerCase());
 	}, [handleSearch, debouncedSearchValue]);
 	const classes = useStyles();
 	return (
