@@ -1,6 +1,6 @@
 import { Grid, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import Tabletop from 'tabletop';
+import Papa from 'papaparse';
 import ItemDisplay from './ItemDisplay';
 import Spinner from './Spinner';
 
@@ -19,30 +19,32 @@ function ItemList({ searchValue }) {
 	useEffect(() => {
 		async function fetchData() {
 			try {
-				let sheetData = await Tabletop.init({
-					key: process.env.REACT_APP_SPREADSHEET_URL,
-					simpleSheet: true,
+				Papa.parse(process.env.REACT_APP_SPREADSHEET_URL, {
+					download: true,
+					header: true,
+					complete: function (results) {
+						var sheetData = results.data;
+						sheetData = sheetData.map((item, i) => {
+							const {
+								Catégorie: category,
+								Nom: name,
+								...potentialOwnersData
+							} = item;
+							const owners = Object.entries(potentialOwnersData)
+								.filter(([_, quantity]) => !!quantity)
+								.map(([owner, _]) => owner);
+							return {
+								id: i,
+								category,
+								name,
+								search: category.toLowerCase() + ' ' + name.toLowerCase(),
+								owners,
+							};
+						});
+						setItemList(sheetData);
+						setFilteredItemList(sheetData);
+					},
 				});
-				console.log('blo');
-				sheetData = sheetData.map((item, i) => {
-					const {
-						Catégorie: category,
-						Nom: name,
-						...potentialOwnersData
-					} = item;
-					const owners = Object.entries(potentialOwnersData)
-						.filter(([_, quantity]) => !!quantity)
-						.map(([owner, _]) => owner);
-					return {
-						id: i,
-						category,
-						name,
-						search: category.toLowerCase() + ' ' + name.toLowerCase(),
-						owners,
-					};
-				});
-				setItemList(sheetData);
-				setFilteredItemList(sheetData);
 			} catch (error) {
 				// inspired by https://github.com/facebook/react/issues/14981#issuecomment-468460187
 				setFilteredItemList(() => {
